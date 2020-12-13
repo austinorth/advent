@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	f, err := os.Open("input.txt")
+	f, err := os.Open("../input.txt")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -20,8 +20,8 @@ func main() {
 	column := 0
 	validPw := 0
 	invalidPw := 0
-	min := 0
-	max := 0
+	pos1 := 0
+	pos2 := 0
 	letterCount := 0
 	var letter rune
 	var tmp []string
@@ -29,12 +29,12 @@ func main() {
 		if column == 0 {
 			// parse number range
 			tmp = strings.Split(s.Text(), "-")
-			min, err = strconv.Atoi(tmp[0])
+			pos1, err = strconv.Atoi(tmp[0])
 			if err != nil {
 				fmt.Println(err)
 				return
 			}
-			max, err = strconv.Atoi(tmp[1])
+			pos2, err = strconv.Atoi(tmp[1])
 			if err != nil {
 				fmt.Println(err)
 				return
@@ -45,22 +45,24 @@ func main() {
 			column++
 		} else {
 			// check password
-			for _, l := range s.Text() {
-				if l == letter {
-					letterCount++
+			for i, l := range s.Text() {
+				if i+1 == pos1 || i+1 == pos2 {
+					if l == letter {
+						letterCount++
+					}
 				}
 			}
-			if letterCount < min || letterCount > max {
-				invalidPw++
-			} else {
+			if letterCount == 1 {
 				validPw++
+			} else {
+				invalidPw++
 			}
-			min = 0
-			max = 0
+			pos1 = 0
+			pos2 = 0
 			letterCount = 0
 			column = 0
 		}
 	}
-	println(invalidPw)
-	println(validPw)
+	println("Invalid passwords:", invalidPw)
+	println("Valid passwords:", validPw)
 }
