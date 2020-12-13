@@ -6,6 +6,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"unicode/utf8"
 )
 
 func main() {
@@ -22,8 +23,8 @@ func main() {
 	min := 0
 	max := 0
 	letterCount := 0
+	var letter rune
 	var tmp []string
-	var letter string
 	for s.Scan() {
 		if column == 0 {
 			// parse number range
@@ -40,8 +41,7 @@ func main() {
 			}
 			column++
 		} else if column == 1 {
-			letter = string((s.Text())
-			letter = letter[0]
+			letter, _ = utf8.DecodeRuneInString(s.Text())
 			column++
 		} else {
 			// check password
@@ -50,7 +50,7 @@ func main() {
 					letterCount++
 				}
 			}
-			if letter < min || letter > max {
+			if letterCount < min || letterCount > max {
 				invalidPw++
 			} else {
 				validPw++
@@ -61,4 +61,6 @@ func main() {
 			column = 0
 		}
 	}
+	println(invalidPw)
+	println(validPw)
 }
